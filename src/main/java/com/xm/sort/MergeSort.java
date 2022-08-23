@@ -3,6 +3,10 @@ package com.xm.sort;
 import java.util.Arrays;
 
 /**
+ * 归并排序，稳定排序
+ * 时间复杂度 O(nlogn)
+ * 空间复杂度 O(n)
+ *
  * @author hongwan
  * @date 2022/8/23
  */

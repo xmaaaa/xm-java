@@ -4,7 +4,8 @@ import java.util.Arrays;
 
 /**
  * 堆排序，不稳定排序
- * 时间复杂度 O(nlogn)
+ * 时间复杂度 最好最差 O(nlogn)
+ * 空间复杂度 非递归O(1)
  *
  * @author xiaoming
  * @date 2022/8/23
@@ -31,6 +32,13 @@ public class HeapSort {
         }
     }
 
+    /**
+     * 递归调整
+     *
+     * @param a
+     * @param i
+     * @param length
+     */
     private static void adjustDown(int[] a, int i, int length) {
         if (i < length) {
             int largest = i;
@@ -45,10 +53,40 @@ public class HeapSort {
             }
             if (largest != i) {
                 swap(a, i, largest);
-                // 调整完，继续向下递归调整
+                // 调整完，继续向下递归调整, 核心点就是将该值放入子树中合适的位置，可以非递归
                 adjustDown(a, largest, length);
             }
         }
+    }
+
+    /**
+     * 非递归调整
+     *
+     * @param a
+     * @param i
+     * @param length
+     */
+    public static void adjustDown2(int[] a, int i, int length) {
+        // 先记录当前调整的堆的父节点的值
+        int temp = a[i];
+        // 初始化 k 指向数组中 i 至 length 之间子数组对应的堆中 i 节点的左子节点
+        for (int k = 2 * i + 1; k < length; k = k * 2 + 1) {
+            // 若右子节点值比左子节点值大，则改变指向
+            if (k + 1 < length && a[k] < a[k + 1]) {
+                k++;
+            }
+            if (temp < a[k]) {
+                // 交换
+                a[i] = a[k];
+                // 将 i 指向 k， 继续调整以 k 为父节点的堆
+                i = k;
+            } else {
+                // 直接退出
+                break;
+            }
+        }
+        // 此时已经找到了父节点应该在子树中的位置
+        a[i] = temp;
     }
 
     public static void swap(int[] a, int i, int j) {
