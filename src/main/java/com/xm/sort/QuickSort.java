@@ -41,7 +41,7 @@ public class QuickSort {
 
 
     /**
-     * 快速选择
+     * 快速选择 O(n)
      *
      * @param a
      * @param start
