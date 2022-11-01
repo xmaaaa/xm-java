@@ -46,28 +46,28 @@ public class ListNodeTest {
         return  pre;
     }
 
-    public static ListNode reverseKGroup(ListNode head, int k) {
+    public ListNode reverseKGroup (ListNode head, int k) {
         // 虚拟头结点
         ListNode dummy = new ListNode(0);
         dummy.next = head;
         int length = 0;
+        ListNode pre = dummy;
         ListNode cur = head;
+        ListNode temp;
         while (head != null) {
             length++;
             head = head.next;
         }
-        ListNode pre = dummy;
         for (int i = 0; i < length / k; i++) {
-            ListNode head2 = cur;
-            int flag = 1;
-            while (cur.next != null && flag < k) {
-                ListNode next = cur.next;
-                cur.next = next.next;
-                next.next = head2;
-                head2 = next;
-                flag++;
+            for (int j = 1; j < k; j++) {
+                temp = cur.next;
+                if (temp == null) {
+                    continue;
+                }
+                cur.next = temp.next;
+                temp.next = pre.next;
+                pre.next = temp;
             }
-            pre.next = head2;
             pre = cur;
             cur = cur.next;
         }
@@ -75,7 +75,10 @@ public class ListNodeTest {
     }
 
     public static void main(String[] args) {
-
+        ListNode listNode = new ListNode(1, new ListNode(2,
+                new ListNode(3, new ListNode(4,
+                        new ListNode(5)))));
+        System.out.println(listNode);
     }
 
 }
