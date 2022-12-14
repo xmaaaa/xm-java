@@ -43,10 +43,10 @@ public class ListNodeTest {
             next.next = pre;
             pre = next;
         }
-        return  pre;
+        return pre;
     }
 
-    public ListNode reverseKGroup (ListNode head, int k) {
+    public ListNode reverseKGroup(ListNode head, int k) {
         // 虚拟头结点
         ListNode dummy = new ListNode(0);
         dummy.next = head;

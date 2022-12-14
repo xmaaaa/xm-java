@@ -36,14 +36,14 @@ public class TreeNodeTest {
     List<Integer> in = Lists.newArrayList();
     List<Integer> next = Lists.newArrayList();
 
-    public void pre(TreeNode root){
+    public void pre(TreeNode root) {
         Deque<TreeNode> stack = new LinkedList<>();
-        while(!stack.isEmpty() ||root != null){
-            if(root != null){
+        while (!stack.isEmpty() || root != null) {
+            if (root != null) {
                 pre.add(root.val);
                 stack.push(root);
                 root = root.left;
-            }else{
+            } else {
                 root = stack.pop();
                 root = root.right;
             }
@@ -51,13 +51,13 @@ public class TreeNodeTest {
         return;
     }
 
-    public void in(TreeNode root){
+    public void in(TreeNode root) {
         Deque<TreeNode> stack = new LinkedList<>();
-        while(!stack.isEmpty() || root != null){
-            if(root != null){
+        while (!stack.isEmpty() || root != null) {
+            if (root != null) {
                 stack.push(root);
                 root = root.left;
-            }else{
+            } else {
                 root = stack.pop();
                 in.add(root.val);
                 root = root.right;
@@ -66,14 +66,14 @@ public class TreeNodeTest {
         return;
     }
 
-    public void next(TreeNode root){
+    public void next(TreeNode root) {
         Deque<TreeNode> stack = new LinkedList<>();
         TreeNode pre = null;
-        while(!stack.isEmpty() || root != null){
-            if(root != null){
+        while (!stack.isEmpty() || root != null) {
+            if (root != null) {
                 stack.push(root);
                 root = root.left;
-            }else{
+            } else {
                 root = stack.peek();
                 if (root.right == null || root.right == pre) {
                     next.add(root.val);
