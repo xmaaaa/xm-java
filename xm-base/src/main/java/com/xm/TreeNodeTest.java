@@ -36,6 +36,11 @@ public class TreeNodeTest {
     List<Integer> in = Lists.newArrayList();
     List<Integer> next = Lists.newArrayList();
 
+    /**
+     * 树的前序遍历, 根左右
+     *
+     * @param root
+     */
     public void pre(TreeNode root) {
         Deque<TreeNode> stack = new LinkedList<>();
         while (!stack.isEmpty() || root != null) {
@@ -51,6 +56,11 @@ public class TreeNodeTest {
         return;
     }
 
+    /**
+     * 树的中序遍历, 左根右
+     *
+     * @param root
+     */
     public void in(TreeNode root) {
         Deque<TreeNode> stack = new LinkedList<>();
         while (!stack.isEmpty() || root != null) {
@@ -66,6 +76,11 @@ public class TreeNodeTest {
         return;
     }
 
+    /**
+     * 树的后序遍历, 左右根
+     *
+     * @param root
+     */
     public void next(TreeNode root) {
         Deque<TreeNode> stack = new LinkedList<>();
         TreeNode pre = null;
