@@ -1,10 +1,9 @@
-package com.xm;
+package com.xm.multithread;
 
 import com.google.common.collect.Lists;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionException;
+import java.util.concurrent.*;
 
 /**
  * @author hongwan
@@ -13,6 +12,11 @@ import java.util.concurrent.CompletionException;
 public class AsyncTest {
 
     public static void main(String[] args) {
+        //completableTest();
+        executorTest();
+    }
+
+    private static void completableTest() {
         List<CompletableFuture<Void>> futureList = Lists.newArrayList();
         List<Integer> result = Lists.newArrayList();
         for (int i = 0; i < 10; i++) {
@@ -41,5 +45,23 @@ public class AsyncTest {
             System.out.println("报错了" + e.getMessage());
         }
         System.out.println(result);
+    }
+
+
+    public static void executorTest() {
+        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(
+                8, 10, 1, TimeUnit.SECONDS,
+                new LinkedBlockingQueue<>(10), new ThreadPoolExecutor.AbortPolicy());
+        for (int i = 0; i < 100; i++) {
+            int finalI = i;
+            CompletableFuture.runAsync(() -> {
+                try {
+                    Thread.sleep(finalI * 1000);
+                } catch (InterruptedException e) {
+                    throw new CompletionException(e);
+                }
+                System.out.println("第" + finalI);
+            }, threadPoolExecutor);
+        }
     }
 }

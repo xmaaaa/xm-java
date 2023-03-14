@@ -103,6 +103,46 @@ public class TreeNodeTest {
         return;
     }
 
+    /**
+     * 深度优先遍历
+     *
+     * @param root
+     */
+    public void depthFirstTraversal(TreeNode root) {
+        Deque<TreeNode> stack = new LinkedList<>();
+        stack.push(root);
+        while (!stack.isEmpty()) {
+            TreeNode node = stack.pop();
+            if (node != null) {
+                // 逻辑
+                // ......
+                // 先右后左
+                stack.push(node.left);
+                stack.push(node.right);
+            }
+        }
+    }
+
+    /**
+     * 广度优先遍历
+     *
+     * @param root
+     */
+    public void breadthFirstTraversal(TreeNode root) {
+        Deque<TreeNode> stack = new LinkedList<>();
+        stack.add(root);
+        while (!stack.isEmpty()) {
+            TreeNode node = stack.remove();
+            if (node != null) {
+                // 逻辑
+                // ...
+                // 先左后右
+                stack.add(node.left);
+                stack.add(node.right);
+            }
+        }
+    }
+
     public static void main(String[] args) {
         TreeNode treeNode = new TreeNode(1, new TreeNode(2, new TreeNode(4), new TreeNode(5)), new TreeNode(3));
 
