@@ -7,6 +7,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
+ * 树相关
+ *
  * @author hongwan
  * @date 2022/10/20
  */
@@ -132,7 +134,7 @@ public class TreeNodeTest {
         Deque<TreeNode> stack = new LinkedList<>();
         stack.add(root);
         while (!stack.isEmpty()) {
-            TreeNode node = stack.remove();
+            TreeNode node = stack.pop();
             if (node != null) {
                 // 逻辑
                 // ...

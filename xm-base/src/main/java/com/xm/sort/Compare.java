@@ -1,4 +1,4 @@
-package com.xm;
+package com.xm.sort;
 
 import com.google.common.collect.Lists;
 import lombok.AllArgsConstructor;
@@ -29,6 +29,8 @@ public class Compare {
         list2.add(new Data2(3));
         list2.add(new Data2(0));
         list2.sort(new Data2Comparator());
+        list2.forEach(l -> System.out.println(l.val));
+        list2.sort(Comparator.comparing(o -> o.val > 0));
         list2.forEach(l -> System.out.println(l.val));
     }
 

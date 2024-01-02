@@ -1,6 +1,8 @@
 package com.xm;
 
 /**
+ * 链表相关
+ *
  * @author XM
  * @date 2021/6/9
  */
