@@ -16,11 +16,14 @@ public class HeapSort {
     public static void main(String[] args) {
         int[] arr = new int[]{5, 4, 3, 52, 6, 7};
         creatBigHeap(arr, arr.length);
+        int[] arr2 = new int[]{5, 4, 3, 52, 6, 7};
+        System.out.println(selectByHeap(arr2, arr.length, 4));
         System.out.println(Arrays.toString(arr));
     }
 
     public static void creatBigHeap(int[] a, int len) {
         // 将无序序列构建成一个堆，根据升序降序需求选择大顶堆或小顶堆
+        // len / 2 - 1 很关键, 无需调整叶子节点，对每个非叶子结点进行调整
         for (int i = len / 2 - 1; i >= 0; i--) {
             adjustDown(a, i, len);
         }
@@ -33,11 +36,34 @@ public class HeapSort {
     }
 
     /**
-     * 递归调整
+     * 选择第index 大的数
      *
      * @param a
-     * @param i
-     * @param length
+     * @param len
+     * @param index
+     * @return
+     */
+    public static int selectByHeap(int[] a, int len, int index) {
+        for (int i = len / 2 - 1; i >= 0; i--) {
+            adjustDown(a, i, len);
+        }
+        // 将堆顶元素与末尾元素交换。将最大的元素沉到数组末端
+        int cur = 1;
+        while (cur < index) {
+            swap(a, 0, a.length - cur);
+            // 重新调整结构，使其满足堆定义，然后继续交换堆顶元素与当前末尾元素，反复执行调整+交换步骤，直到整个序列有序
+            adjustDown(a, 0, a.length - cur);
+            cur++;
+        }
+        return a[0];
+    }
+
+    /**
+     * 递归调整 (某一个节点至合适的位置)
+     *
+     * @param a      数组
+     * @param i      调整的节点
+     * @param length 数字大小
      */
     private static void adjustDown(int[] a, int i, int length) {
         if (i < length) {
