@@ -2,6 +2,9 @@ package com.ofs.domain.order;
 
 import com.ofs.domain.order.application.command.OrderCommandService;
 import com.ofs.domain.order.application.command.OrderCommandServiceImpl;
+import com.ofs.domain.order.application.query.OrderQueryService;
+import com.ofs.domain.order.application.query.OrderQueryServiceImpl;
+import com.ofs.domain.order.application.query.OrderView;
 import com.ofs.domain.order.domain.service.OrderDomainService;
 import com.ofs.domain.order.domain.exception.IllegalOrderStateException;
 import com.ofs.domain.order.domain.model.Order;
@@ -21,11 +24,13 @@ class OrderCommandServiceTest {
 
     private OrderCommandService orderService;
     private OrderRepository repo;
+    private OrderQueryService queryService;
 
     @BeforeEach
     void setUp() {
         repo = new InMemoryOrderRepository();
         orderService = new OrderCommandServiceImpl(new OrderDomainService(repo));
+        queryService = new OrderQueryServiceImpl(repo);
     }
 
     @Test
@@ -36,19 +41,19 @@ class OrderCommandServiceTest {
         assertNotNull(id.getValue());
         assertTrue(id.getValue().startsWith("ORD-"));
 
-        Order order = orderService.getOrder(id);
-        assertEquals(OrderState.DRAFT, order.getState());
-        assertEquals(1, order.getLines().size());
-        assertEquals(new BigDecimal("100.00"), order.getTotalAmount());
+        OrderView order = queryService.getById(id).orElseThrow();
+        assertEquals(OrderState.DRAFT, order.state());
+        assertEquals(1, order.lines().size());
+        assertEquals(new BigDecimal("100.00"), order.totalAmount());
 
         orderService.submit(id);
-        assertEquals(OrderState.SUBMITTED, orderService.getOrder(id).getState());
+        assertEquals(OrderState.SUBMITTED, queryService.getById(id).orElseThrow().state());
 
         orderService.markPaid(id, "PAY-1");
-        assertEquals(OrderState.PAID, orderService.getOrder(id).getState());
+        assertEquals(OrderState.PAID, queryService.getById(id).orElseThrow().state());
 
         orderService.ship(id);
-        assertEquals(OrderState.SHIPPED, orderService.getOrder(id).getState());
+        assertEquals(OrderState.SHIPPED, queryService.getById(id).orElseThrow().state());
     }
 
     @Test
@@ -65,6 +70,6 @@ class OrderCommandServiceTest {
                 new OrderCommandService.OrderLineDto("SKU-1", 1, new BigDecimal("10.00"))
         ));
         orderService.cancel(id);
-        assertEquals(OrderState.CANCELLED, orderService.getOrder(id).getState());
+        assertEquals(OrderState.CANCELLED, queryService.getById(id).orElseThrow().state());
     }
 }
