@@ -2,6 +2,8 @@ package com.ofs.domain.order;
 
 import com.ofs.domain.order.application.command.OrderCommandService;
 import com.ofs.domain.order.application.command.OrderCommandServiceImpl;
+import com.ofs.domain.order.application.query.OrderQueryService;
+import com.ofs.domain.order.application.query.OrderQueryServiceImpl;
 import com.ofs.domain.order.application.scheduler.OrderTimeoutScheduler;
 import com.ofs.domain.order.domain.model.OrderRepository;
 import com.ofs.domain.order.domain.service.OrderDomainService;
@@ -22,12 +24,14 @@ class OrderTimeoutSchedulerTest {
     private OrderRepository repo;
     private OrderDomainService domainService;
     private OrderCommandService orderService;
+    private OrderQueryService queryService;
 
     @BeforeEach
     void setUp() {
         repo = new InMemoryOrderRepository();
         domainService = new OrderDomainService(repo);
         orderService = new OrderCommandServiceImpl(domainService);
+        queryService = new OrderQueryServiceImpl(repo);
     }
 
     @Test
@@ -40,12 +44,12 @@ class OrderTimeoutSchedulerTest {
                 new OrderCommandService.OrderLineDto("SKU-1", 1, new BigDecimal("10"))
         ));
         orderService.submit(id);
-        assertEquals(OrderState.SUBMITTED, orderService.getOrder(id).getState());
+        assertEquals(OrderState.SUBMITTED, queryService.getById(id).orElseThrow().state());
 
         Thread.sleep(5);
 
         int cancelled = scheduler.run();
         assertTrue(cancelled >= 1);
-        assertEquals(OrderState.CANCELLED, orderService.getOrder(id).getState());
+        assertEquals(OrderState.CANCELLED, queryService.getById(id).orElseThrow().state());
     }
 }
