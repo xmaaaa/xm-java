@@ -2,6 +2,8 @@ package com.ofs.app.web;
 
 import com.ofs.domain.concurrent.lock.LockPolicy;
 import com.ofs.domain.order.application.command.OrderCommandService;
+import com.ofs.domain.order.application.query.OrderQueryService;
+import com.ofs.domain.order.application.query.OrderView;
 import com.ofs.domain.order.domain.model.OrderId;
 import com.ofs.domain.transaction.OrderSubmitWithPaymentSagaService;
 import com.ofs.domain.transaction.OrderSubmitWithPaymentTccService;
@@ -26,6 +28,9 @@ public class OrderController {
 
     @Autowired(required = false)
     private OrderCommandService orderCommandService;
+
+    @Autowired(required = false)
+    private OrderQueryService orderQueryService;
 
     @Autowired(required = false)
     private OrderSubmitWithPaymentTccService orderSubmitWithPaymentTccService;
@@ -72,15 +77,17 @@ public class OrderController {
         requireService().cancel(new OrderId(orderId));
     }
 
+    /**
+     * 读路径走 CQRS 读侧（OrderQueryService），不再借用写侧的 getOrder()。
+     * 不存在时抛出与 OrderDomainService 一致的消息，GlobalExceptionHandler 按前缀映射为 404 ORDER_NOT_FOUND。
+     */
     @GetMapping("/{orderId}")
-    public Map<String, Object> getOrder(@PathVariable String orderId) {
-        var order = requireService().getOrder(new OrderId(orderId));
-        return Map.of(
-                "orderId", order.getId().getValue(),
-                "userId", order.getUserId(),
-                "state", order.getState().name(),
-                "totalAmount", order.getTotalAmount()
-        );
+    public OrderView getOrder(@PathVariable String orderId) {
+        if (orderQueryService == null) {
+            throw new IllegalStateException("OrderQueryService not configured");
+        }
+        return orderQueryService.getById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Order not found: " + orderId));
     }
 
     /** TCC 版：提交并支付。入口加订单锁防并发，Try 仅校验。 */
