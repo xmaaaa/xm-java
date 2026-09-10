@@ -1,6 +1,5 @@
 package com.ofs.domain.order.application.command;
 
-import com.ofs.domain.order.domain.model.Order;
 import com.ofs.domain.order.domain.model.OrderId;
 import com.ofs.domain.order.domain.model.OrderLine;
 import com.ofs.domain.order.domain.state.OrderEvent;
@@ -46,8 +45,6 @@ public interface OrderCommandService {
      * 取消订单
      */
     void cancel(OrderId orderId);
-
-    Order getOrder(OrderId orderId);
 
     /** 行项 DTO，便于应用层与外部入参 */
     record OrderLineDto(String skuId, int quantity, BigDecimal price) {

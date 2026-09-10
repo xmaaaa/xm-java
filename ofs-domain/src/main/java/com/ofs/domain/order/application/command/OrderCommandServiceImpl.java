@@ -67,11 +67,6 @@ public class OrderCommandServiceImpl implements OrderCommandService {
         publish(OrderDomainEvent.TYPE_CANCELLED, orderId.getValue(), order.getUserId(), "{}");
     }
 
-    @Override
-    public Order getOrder(OrderId orderId) {
-        return domainService.getOrder(orderId);
-    }
-
     private void publish(String eventType, String orderId, String userId, String payload) {
         if (eventPublisher == null) return;
         OrderDomainEvent event = new OrderDomainEvent(
