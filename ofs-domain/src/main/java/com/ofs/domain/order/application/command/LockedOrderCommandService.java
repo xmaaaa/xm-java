@@ -1,7 +1,6 @@
 package com.ofs.domain.order.application.command;
 
 import com.ofs.domain.concurrent.lock.LockPolicy;
-import com.ofs.domain.order.domain.model.Order;
 import com.ofs.domain.order.domain.model.OrderId;
 
 import java.util.List;
@@ -58,11 +57,6 @@ public class LockedOrderCommandService implements OrderCommandService {
             delegate.cancel(orderId);
             return null;
         });
-    }
-
-    @Override
-    public Order getOrder(OrderId orderId) {
-        return delegate.getOrder(orderId);
     }
 
     private void runWithOrderLock(OrderId orderId, java.util.concurrent.Callable<Void> task) {

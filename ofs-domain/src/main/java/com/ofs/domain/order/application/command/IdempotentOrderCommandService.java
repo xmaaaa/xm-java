@@ -1,6 +1,5 @@
 package com.ofs.domain.order.application.command;
 
-import com.ofs.domain.order.domain.model.Order;
 import com.ofs.domain.order.domain.model.OrderId;
 import com.ofs.domain.shared.idempotency.IdempotencyKeyStore;
 
@@ -86,11 +85,6 @@ public class IdempotentOrderCommandService implements OrderCommandService {
     @Override
     public void cancel(OrderId orderId) {
         delegate.cancel(orderId);
-    }
-
-    @Override
-    public Order getOrder(OrderId orderId) {
-        return delegate.getOrder(orderId);
     }
 
     private record CachedResult(OrderId orderId, long expireAt) {
